@@ -1,0 +1,48 @@
+services:
+  # Backend service (Node.js)
+  - type: web
+    name: jwt-auth-backend
+    env: node
+    rootDir: JWT03
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DB_HOST
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_NAME
+        sync: false
+      - key: DB_PORT
+        sync: false
+      - key: PORT
+        value: 10000
+      - key: JWT_SECRET
+        generateValue: true
+      - key: FRONTEND_URL
+        fromService:
+          name: jwt-auth-frontend
+          type: web
+          property: url
+  # Frontend service (React)
+  - type: web
+    name: jwt-auth-frontend
+    env: static
+    rootDir: tarea/react-jwt-auth
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./build
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: REACT_APP_API_URL
+        fromService:
+          name: jwt-auth-backend
+          type: web
+          property: url
+          append: /api
