@@ -1,8 +1,7 @@
 services:
   # Frontend service (React) - Esto es completamente gratuito
-  - type: static
+  - type: static-site
     name: jwt-auth-frontend
-    env: static
     rootDir: tarea/react-jwt-auth
     buildCommand: npm install && npm run build
     staticPublishPath: ./build
