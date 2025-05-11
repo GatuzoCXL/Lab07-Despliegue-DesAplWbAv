@@ -53,50 +53,63 @@ app.use("/api/test", userRoutes);
 const PORT = process.env.PORT || 3000;
 
 // Función para inicializar los roles en la base de datos
-function initial() {
+async function initial() {
   console.log("Inicializando roles en la base de datos...");
   
-  Role.create({
-    id: 1,
-    name: "user"
-  }).then(() => {
+  try {
+    // Comprobar si ya existen roles
+    const count = await Role.count();
+    if (count > 0) {
+      console.log("Roles ya existentes en la base de datos. No es necesario crearlos.");
+      return;
+    }
+
+    // Crear roles si no existen
+    await Role.create({
+      id: 1,
+      name: "user"
+    });
     console.log("Rol 'user' añadido a la base de datos");
-  }).catch(err => {
-    console.log("Error al crear rol 'user':", err.message);
-  });
- 
-  Role.create({
-    id: 2,
-    name: "moderator"
-  }).then(() => {
+
+    await Role.create({
+      id: 2,
+      name: "moderator"
+    });
     console.log("Rol 'moderator' añadido a la base de datos");
-  }).catch(err => {
-    console.log("Error al crear rol 'moderator':", err.message);
-  });
- 
-  Role.create({
-    id: 3,
-    name: "admin"
-  }).then(() => {
+
+    await Role.create({
+      id: 3,
+      name: "admin"
+    });
     console.log("Rol 'admin' añadido a la base de datos");
-  }).catch(err => {
-    console.log("Error al crear rol 'admin':", err.message);
-  });
+    
+    console.log("Todos los roles han sido creados correctamente");
+  } catch (err) {
+    console.error("Error al crear roles:", err.message);
+  }
 }
 
 // Sincroniza los modelos con la base de datos e inicializa los roles
 // En producción, no queremos recrear las tablas cada vez
 const forceSync = process.env.NODE_ENV === 'production' ? false : true;
 
+console.log("=== Configuración de la base de datos ===");
+console.log("NODE_ENV:", process.env.NODE_ENV);
+console.log("Force Sync:", forceSync);
+console.log("======================================");
+
 db.sequelize.sync({ force: forceSync }).then(() => {
   console.log("Base de datos sincronizada y tablas creadas");
   
-  // Llamamos a la función para inicializar los roles solo si estamos recreando las tablas
-  if (forceSync) {
+  // En un entorno de producción nuevo, también queremos inicializar los roles
+  // Para un despliegue académico, aseguramos que los roles existan
+  if (forceSync || process.env.NODE_ENV === 'production') {
     initial();
   }
   
   app.listen(PORT, () => {
     console.log(`Servidor ejecutándose en el puerto ${PORT}.`);
   });
+}).catch(err => {
+  console.error("Error al conectar con la base de datos:", err);
 });
