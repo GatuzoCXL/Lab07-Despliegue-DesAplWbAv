@@ -12,9 +12,9 @@ services:
       - key: DB_HOST
         sync: false
       - key: DB_USER
+        sync: false      - key: DB_PASSWORD
         sync: false
-      - key: DB_PASSWORD
-        sync: false      - key: DB_NAME
+      - key: DB_NAME
         sync: false
       - key: DB_PORT
         sync: false
@@ -28,9 +28,9 @@ services:
           type: web
           property: hostport
   # Frontend service (React)
-  - type: web
-    name: jwt-auth-frontend
-    env: static    rootDir: tarea/react-jwt-auth
+  - type: web    name: jwt-auth-frontend
+    env: static
+    rootDir: tarea/react-jwt-auth
     buildCommand: npm install && npm run build
     staticPublishPath: ./build
     routes:
