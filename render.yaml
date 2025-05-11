@@ -22,12 +22,11 @@ services:
       - key: PORT
         value: 10000
       - key: JWT_SECRET
-        generateValue: true
-      - key: FRONTEND_URL
+        generateValue: true      - key: FRONTEND_URL
         fromService:
           name: jwt-auth-frontend
           type: web
-          property: url
+          property: host
   # Frontend service (React)
   - type: web
     name: jwt-auth-frontend
@@ -39,10 +38,9 @@ services:
       - type: rewrite
         source: /*
         destination: /index.html
-    envVars:
-      - key: REACT_APP_API_URL
+    envVars:      - key: REACT_APP_API_URL
         fromService:
           name: jwt-auth-backend
           type: web
-          property: url
+          property: host
           append: /api
