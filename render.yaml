@@ -9,6 +9,5 @@ services:
       - type: rewrite
         source: /*
         destination: /index.html
-    envVars:
-      - key: REACT_APP_API_URL
-        value: "https://tu-backend-url.com/api"  # Esto se actualizará manualmente después
+    envVars:      - key: REACT_APP_API_URL
+        value: "https://jwt-auth-backend-ym69.onrender.com/api"

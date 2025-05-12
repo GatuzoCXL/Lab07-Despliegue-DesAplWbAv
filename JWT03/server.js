@@ -25,7 +25,10 @@ const app = express();
 
 // Configura las opciones de CORS para permitir acceso desde el frontend
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || "http://localhost:3001",  // Usa la variable de entorno o fallback a localhost:3001
+  origin: [
+    process.env.FRONTEND_URL || "http://localhost:3001",  // Usa la variable de entorno o fallback a localhost:3001
+    "https://jwt-auth-frontend.onrender.com" // URL donde se desplegará el frontend en Render
+  ],
   credentials: true  // Para permitir cookies en las solicitudes cross-origin si es necesario
 };
 
